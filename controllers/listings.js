@@ -44,11 +44,15 @@ module.exports.createListing = async (req, res, next) => {
       `${req.body.listing.location}, ${req.body.listing.country}`
     );
 
+    const coords = (data && data.length > 0 && data[0].longitude && data[0].latitude)
+      ? [data[0].longitude, data[0].latitude]
+      : [77.2090, 28.6139];
+
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.geometry = {
       type: "Point",
-      coordinates: [data[0].longitude, data[0].latitude],
+      coordinates: coords,
     };
 
     if (req.file) {
@@ -93,13 +97,17 @@ module.exports.updateListing = async (req, res) => {
       `${req.body.listing.location}, ${req.body.listing.country}`
     );
 
+    const coords = (data && data.length > 0 && data[0].longitude && data[0].latitude)
+      ? [data[0].longitude, data[0].latitude]
+      : [77.2090, 28.6139];
+
     let listing = await Listing.findByIdAndUpdate(id, {
       ...req.body.listing,
     }, { new: true });
 
     listing.geometry = {
       type: "Point",
-      coordinates: [data[0].longitude, data[0].latitude],
+      coordinates: coords,
     };
 
     if (typeof req.file !== "undefined") {

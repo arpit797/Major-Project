@@ -36,10 +36,17 @@
   <% } %>
 
   <!-- MAP -->
-  <% if(listing.geometry && listing.geometry.coordinates){ %>
+  <% if(listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates.length === 2){ %>
     <div class="col-8 offset-2 mt-4">
-      <h4>Where you'll be</h4>
-      <div id="map" style="height: 400px; border-radius: 10px;"></div>
+      <h3>Where you'll be</h3>
+      <div 
+        id="map" 
+        data-lat="<%= listing.geometry.coordinates[1] %>"
+        data-lng="<%= listing.geometry.coordinates[0] %>"
+        data-title="<%= listing.title %>"
+        data-location="<%= listing.location %>, <%= listing.country %>"
+        style="height: 400px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 1rem;"
+      ></div>
     </div>
   <% } %>
 
@@ -134,20 +141,4 @@
 <!-- Leaflet CSS & JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<% if(listing.geometry && listing.geometry.coordinates){ %>
-<script>
-  const coords = <%- JSON.stringify(listing.geometry.coordinates) %>;
-
-  const map = L.map("map").setView([coords[1], coords[0]], 10);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors",
-  }).addTo(map);
-
-  L.marker([coords[1], coords[0]])
-    .addTo(map)
-    .bindPopup(`<b><%= listing.title %></b><br><%= listing.location %>, <%= listing.country %>`)
-    .openPopup();
-</script>
-<% } %>
+<script src="/js/map.js"></script>
