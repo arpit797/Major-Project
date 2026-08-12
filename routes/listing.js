@@ -37,12 +37,14 @@ router.get("/search", async (req, res) => {
         { title:    { $regex: query, $options: "i" } },
         { location: { $regex: query, $options: "i" } },
         { country:  { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
       ],
     });
 
     res.render("listings/index", {
       allListings,
-      searchQuery: query,   
+      searchQuery: query,
+      selectedCategory: null,
     });
 
   } catch (err) {

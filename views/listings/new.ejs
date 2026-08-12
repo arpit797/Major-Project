@@ -32,18 +32,36 @@
       <div class="row">
       <div class="mb-3 col-md-4">
         <label for="price" class="form-label">Price</label>
-         <input name="listing[price]" placeholder="1200" class="form-control"required />
+         <input name="listing[price]" placeholder="1200" class="form-control" required />
          <div class="invalid-feedback">
-        Price should be valid
- </div>
+           Price should be valid
+         </div>
       </div>
      
-      <div class="mb-3 col-md-8">
+      <div class="mb-3 col-md-4">
         <label for="country" class="form-label">Country</label>
-        <input name="listing[country]" placeholder="India" type="text" class="form-control"required/>
+        <input name="listing[country]" placeholder="India" type="text" class="form-control" required/>
         <div class="invalid-feedback">
-        Country name should be valid
-           </div>
+          Country name should be valid
+        </div>
+      </div>
+
+      <div class="mb-3 col-md-4">
+        <label for="category" class="form-label">Category</label>
+        <select name="listing[category]" class="form-select" required>
+          <option value="Trending">Trending</option>
+          <option value="Rooms">Rooms</option>
+          <option value="Iconic Cities">Iconic Cities</option>
+          <option value="Mountains">Mountains</option>
+          <option value="Castles">Castles</option>
+          <option value="Amazing Pools">Amazing Pools</option>
+          <option value="Camping">Camping</option>
+          <option value="Farms">Farms</option>
+          <option value="Arctic">Arctic</option>
+        </select>
+        <div class="invalid-feedback">
+          Please select a category
+        </div>
       </div>
       </div>
       <div class="mb-3">

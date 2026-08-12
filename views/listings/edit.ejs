@@ -29,25 +29,35 @@
         <label for="image" class="form-label">Upload New Image</label>
             <input name="listing[image]"type="file" class="form-control"/>
       </div>
-      <div class="row  ">
+      <div class="row">
       <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
-          <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control"required />
+          <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control" required />
           <div class="invalid-feedback">
-        Price should be valid
- </div>
+            Price should be valid
+          </div>
       </div>
       
       <div class="mb-3 col-md-4">
         <label for="country" class="form-label">Country</label>
-          <input
-        name="listing[country]"
-        value="<%= listing.country %>"
-        type="text"
-      class="form-control" required/>
-      <div class="invalid-feedback">
-        Country name should be valid
-           </div>
+        <input
+          name="listing[country]"
+          value="<%= listing.country %>"
+          type="text"
+          class="form-control" required/>
+        <div class="invalid-feedback">
+          Country name should be valid
+        </div>
+      </div>
+
+      <div class="mb-3 col-md-4">
+        <label for="category" class="form-label">Category</label>
+        <select name="listing[category]" class="form-select" required>
+          <% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Camping", "Farms", "Arctic"]; %>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= listing.category === cat ? "selected" : "" %>><%= cat %></option>
+          <% }); %>
+        </select>
       </div>
       </div>
       <div class="mb-3">
