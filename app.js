@@ -17,11 +17,20 @@ const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
+const localDbUrl = "mongodb://127.0.0.1:27017/wanderlust";
 
 mongoose.connect(dbUrl)
     .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.error(" DB Connection Error:", err));
+    .catch(async (err) => {
+        console.warn("MongoDB Atlas connection failed. Falling back to local MongoDB...");
+        try {
+            await mongoose.connect(localDbUrl);
+            console.log("Connected to local MongoDB database");
+        } catch (localErr) {
+            console.error("DB Connection Error:", localErr);
+        }
+    });
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -31,7 +40,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    mongoUrl: localDbUrl,
     touchAfter: 24 * 3600,
 });
 

@@ -21,6 +21,7 @@ const initDB = async () => {
   initData.data = initData.data.map((obj) => ({
     ...obj,
     owner: "69cbe52f1dc3735a43d4c36a",
+    image: typeof obj.image === "string" ? { url: obj.image, filename: "listingimage" } : obj.image,
     geometry: obj.geometry || {
       type: "Point",
       coordinates: [77.2090, 28.6139],
