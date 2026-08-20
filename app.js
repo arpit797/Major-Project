@@ -23,6 +23,9 @@ const localDbUrl = "mongodb://127.0.0.1:27017/wanderlust";
 const atlasUrl = process.env.ATLASDB_URL;
 
 async function connectDB() {
+    if (mongoose.connection.readyState >= 1) {
+        return mongoose.connection.getClient();
+    }
     const urlsToTry = [
         process.env.NODE_ENV === "production" ? atlasUrl : localDbUrl,
         atlasUrl,
@@ -50,13 +53,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
-const store = MongoStore.create({
-    clientPromise,
+const storeConfig = {
     crypto: {
         secret: process.env.SECRET || "mysupersecretcode",
     },
     touchAfter: 24 * 3600,
-});
+};
+
+if (atlasUrl) {
+    storeConfig.mongoUrl = atlasUrl;
+} else {
+    storeConfig.clientPromise = clientPromise;
+}
+
+const store = MongoStore.create(storeConfig);
 
 store.on("error", (err) => console.error("SESSION STORE ERROR:", err));
 
