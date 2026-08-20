@@ -87,8 +87,12 @@ module.exports.renderEditForm = async (req, res) => {
     return res.redirect("/listings");
   }
 
-  let originalImageUrl = listing.image.url;
-  originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  let originalImageUrl = typeof listing.image === "object" && listing.image && listing.image.url 
+    ? listing.image.url 
+    : (typeof listing.image === "string" ? listing.image : "");
+  if (originalImageUrl && originalImageUrl.includes("/upload")) {
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  }
 
   res.render("listings/edit.ejs", { listing, originalImageUrl });
 };

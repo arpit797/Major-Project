@@ -13,7 +13,7 @@
 
     <div class="card-body">
       <p class="card-text">
-        Owned by <i><%= listing.owner.username %></i>
+        Owned by <i><%= listing.owner ? listing.owner.username : 'Unknown' %></i>
       </p>
       <p class="card-text"><%= listing.description %></p>
       <p class="card-text">₹ <%= listing.price.toLocaleString("en-IN") %></p>
