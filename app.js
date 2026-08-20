@@ -21,16 +21,13 @@ const userRouter = require("./routes/user.js");
 
 const localDbUrl = "mongodb://127.0.0.1:27017/wanderlust";
 const atlasUrl = process.env.ATLASDB_URL;
+const dbUrl = atlasUrl || localDbUrl;
 
 async function connectDB() {
     if (mongoose.connection.readyState >= 1) {
         return mongoose.connection.getClient();
     }
-    const urlsToTry = [
-        process.env.NODE_ENV === "production" ? atlasUrl : localDbUrl,
-        atlasUrl,
-        localDbUrl
-    ].filter(Boolean);
+    const urlsToTry = [atlasUrl, localDbUrl].filter(Boolean);
 
     for (const url of urlsToTry) {
         try {
@@ -41,7 +38,7 @@ async function connectDB() {
             console.warn(`Connection failed for ${url.includes("127.0.0.1") ? "Local DB" : "Atlas DB"}: ${err.message}`);
         }
     }
-    console.error("Could not connect to any MongoDB database.");
+    throw new Error("Could not connect to any MongoDB database.");
 }
 
 const clientPromise = connectDB();
@@ -53,20 +50,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
-const storeConfig = {
+const store = MongoStore.create({
+    clientPromise,
     crypto: {
         secret: process.env.SECRET || "mysupersecretcode",
     },
     touchAfter: 24 * 3600,
-};
-
-if (atlasUrl) {
-    storeConfig.mongoUrl = atlasUrl;
-} else {
-    storeConfig.clientPromise = clientPromise;
-}
-
-const store = MongoStore.create(storeConfig);
+});
 
 store.on("error", (err) => console.error("SESSION STORE ERROR:", err));
 
